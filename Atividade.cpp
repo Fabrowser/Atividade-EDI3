@@ -8,18 +8,10 @@ struct Funcionario
 	double salario;
 };
 
-
-
-struct Lista
-{
-	Funcionario f;
-	Lista* ant;
-	int prontuario;
-	string nome;
-	double salario;
-
+struct Lista {
+	Funcionario *funcionario;
+	Lista *ant;
 };
-
 
 
 Lista* init()
@@ -32,18 +24,11 @@ int isEmpty(Lista* lista)
 	return (lista == NULL);
 }
 
-Lista* insert(Lista* lista, int prontuario, string nome, double salario)
-
+Lista* insert(Lista* lista, Funcionario *f)
 {
-
 	Lista* novo = new Lista();
-    novo->prontuario=prontuario;
-	novo->nome=nome;
-	novo->salario =salario;
-	
+    novo->funcionario = f;
 	novo->ant = lista;
-	
-
 	return novo;
 
 }
@@ -62,35 +47,25 @@ int count(Lista* lista)
 	return k;
 }
 
-
-
 void print(Lista* lista)
 {
-	int k = 0;
 	Lista* aux;
 	aux = lista;
 	while (aux != NULL)
 	{
-		
-	
-		
-        cout << "Prontuario: " << aux->prontuario << endl;
-        cout << "Nome: " << aux->nome << endl;
-        cout << "Salário: " << aux->salario << endl;
+        cout << "Prontuario: " << aux->funcionario->prontuario << endl;
+        cout << "Nome: " << aux->funcionario->nome << endl;
+        cout << "Salário: " << aux->funcionario->salario << endl;
         cout << "----------" << endl;
-        
         aux = aux->ant;
-        k++;
 	}
-
-
 }
 
 Lista* find(Lista* lista, int p)
 {
 	Lista* aux;
 	aux = lista;
-	while (aux != NULL && aux->prontuario != p)
+	while (aux != NULL && aux->funcionario->prontuario != p)
 	{
 		aux = aux->ant;
 	}
@@ -98,13 +73,17 @@ Lista* find(Lista* lista, int p)
 }
 
 
+//REMOVER
+
+
 Lista* remove(Lista* lista, int p)
 {
+	
 	Lista *aux;
 	
 	Lista *anterior = NULL;
 	aux = lista;
-	while (aux != NULL && aux->prontuario!= p)
+	while (aux != NULL && aux->funcionario->prontuario!= p)
 	{
 		anterior = aux;
 		aux = aux->ant;
@@ -124,8 +103,10 @@ Lista* remove(Lista* lista, int p)
    	    anterior->ant = aux->ant;
 	}
 	free(aux);
+	
 	return lista;
 }
+
 
 
 
@@ -134,15 +115,24 @@ int main(int argc, char** argv)
 	Lista* minhaLista;
 	minhaLista = init();
 	
+	Funcionario *func1 = new Funcionario;
+	func1->prontuario=1;
+	func1->nome="um";
+	func1->salario=100;
+	minhaLista = insert(minhaLista,func1);
+	Funcionario *func2 = new Funcionario;
+	func2->prontuario=2;
+	func2->nome="dois";
+	func2->salario=200;
+	minhaLista = insert(minhaLista,func2);
+	Funcionario *func3 = new Funcionario;
+	func3->prontuario=3;
+	func3->nome="tres";
+	func3->salario=300;
+	minhaLista = insert(minhaLista,func3);
 	
-		   	int opcao;
-			int prontuario;
-			string nome;
-			double salario;	
-		
-			int k=0;		
-						
-		
+		   	int opcao;		
+
 			do{
 	  	          cout << "0. Sair:" << endl;
 				  cout << "1. Incluir" << endl;
@@ -156,24 +146,16 @@ int main(int argc, char** argv)
 					case 1:
 						
 						{
-							
+                        Funcionario *umFuncionarioQualquer = new Funcionario;
 					
-						
 						cout << "Digite o prontuario do funcionario:" << endl;
-						cin >> prontuario;
+						cin >> umFuncionarioQualquer->prontuario;
 						cout << "Digite o nome do funcionario:" << endl;
-						cin >> nome;
+						cin >> umFuncionarioQualquer->nome;
 						cout << "Digite o Salario:" << endl;
-						cin >> salario;
-
-						k++;
+						cin >> umFuncionarioQualquer->salario;
 						
-						//Funcionario funcionario = new Funcionario(prontuario,nome,salario);
-
-						
-						minhaLista = insert(minhaLista,prontuario,nome,salario);
-						
-						
+						minhaLista = insert(minhaLista,umFuncionarioQualquer);
 						
 						}
 				
@@ -182,11 +164,12 @@ int main(int argc, char** argv)
 						
 					case 2: 
 						{
+                        int pront;
 						cout << "Digite o prontuario para excluir" << endl;
-						cin >> prontuario;
-						cout << "PARA EXCLUIR:" << prontuario << endl;
+						cin >> pront;
+						cout << "PARA EXCLUIR:" << pront << endl;
 							
-						remove(minhaLista,prontuario);	
+						minhaLista = remove(minhaLista,pront);	
 						
 					
 						}
@@ -197,11 +180,11 @@ int main(int argc, char** argv)
 						case 3:
 						
 						{
-							
+						int pront;	
 						cout << "Digite o prontuario para pesquisar" << endl;
-						cin >> prontuario;
+						cin >> pront;
 							
-						cout << "Funcionário retornado da pesquisa: " << find(minhaLista,prontuario)->nome <<endl;
+						cout << "Funcionário retornado da pesquisa: " << find(minhaLista,pront)->funcionario->nome <<endl;
 						cout << "------------------" << endl;
 						
 							
